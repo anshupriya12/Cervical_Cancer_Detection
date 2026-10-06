@@ -1,29 +1,50 @@
 # Cervical Cancer Detection
 
-This project was originally built as a deep learning notebook for Pap smear classification. It is now prepared for Streamlit deployment.
+A Pap smear classification project for detecting cervical cancer using deep learning and transfer learning.
 
-## What was added
-- `app.py`: Streamlit web app for image upload and prediction
-- `requirements.txt`: Python dependencies for deployment
+## Overview
+This project applies a transfer learning approach to classify Pap smear images into five cervical cell categories. The model is built using a pre-trained ResNet101V2 backbone and fine-tuned for this classification task.
 
-## How to deploy on Streamlit Cloud
-1. Push this repository to GitHub.
-2. Open https://streamlit.io/
-3. Choose "Deploy an app"
-4. Connect your GitHub account and select this repository.
-5. Set the main file to `app.py`.
-6. Click Deploy.
+## Dataset
+The dataset used in this project contains multiple cervical cell image folders, organized by class. The model is trained on five classes:
 
-## Important note about the model
-The notebook contains the model architecture and training logic, but the repository does not currently include a saved `.keras` or `.h5` model file. The app will still run with a placeholder ResNet101V2 model, but for real predictions you need to save your trained model as one of these files:
+- im_Dyskeratotic
+- im_Koilocytotic
+- im_Metaplastic
+- im_Parabasal
+- im_Superficial-Intermediate
 
-- `model/cervical_cancer_model.keras`
-- `model/cervical_cancer_model.h5`
+## Model Architecture
+The notebook implements a transfer learning model based on ResNet101V2:
 
-After saving the trained model, Streamlit will automatically use it when the app starts.
+- Base model: ResNet101V2 (ImageNet pre-trained weights)
+- Input shape: (128, 128, 3)
+- Output classes: 5
+- Activation: softmax
+- Loss: categorical crossentropy
+- Optimizer: Adam
+- Metric: accuracy
 
-## Run locally
+## Training Workflow
+The notebook includes the following core steps:
+
+1. Loading image datasets from class folders
+2. Resizing images to 128x128
+3. Normalizing pixel values to the range [0, 1]
+4. Preparing one-hot encoded labels
+5. Training a transfer learning model using ResNet101V2
+6. Evaluating the model on a test set
+
+## Image Preprocessing
+The project uses the following preprocessing pipeline for training and inference:
+
+- Resize images to 128 x 128
+- Convert images to RGB
+- Scale pixel values by dividing by 255.0
+- Use image folders for class-based loading via `ImageDataGenerator.flow_from_directory()`
+
+## Requirements
+To run the notebook and related scripts, install the necessary dependencies:
+
 ```bash
-pip install -r requirements.txt
-streamlit run app.py
-```
+pip install tensorflow numpy pandas opencv-python scikit-learn keras pillow matplotlib tqdm
